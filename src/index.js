@@ -80,7 +80,7 @@ const defaultInputProps = {
 class TagsInput extends React.Component {
   constructor () {
     super()
-    this.state = {tag: '', isFocused: false}
+    this.state = {tag: '', isFocused: false, inputIsFocused: false, isTagFocused: false}
     this.focus = ::this.focus
     this.blur = ::this.blur
   }
@@ -205,7 +205,7 @@ class TagsInput extends React.Component {
       this.refs.input.focus()
     }
 
-    this.handleOnFocus()
+    this.setStateToFocused();
   }
 
   blur () {
@@ -213,7 +213,7 @@ class TagsInput extends React.Component {
       this.refs.input.blur()
     }
 
-    this.handleOnBlur()
+    this.setStateToNotFocused();
   }
 
   accept () {
@@ -270,7 +270,7 @@ class TagsInput extends React.Component {
       }
     }
 
-    if (remove && value.length > 0 && empty) {
+    if (remove && value.length > 0 && empty && !this.state.inputIsFocused) {
       e.preventDefault()
       this._removeTag(value.length - 1)
     }
@@ -279,6 +279,7 @@ class TagsInput extends React.Component {
   handleClick (e) {
     if (e.target === this.refs.div) {
       this.focus()
+      this.setState({inputIsFocused: true})
     }
   }
 
@@ -293,37 +294,40 @@ class TagsInput extends React.Component {
     this.setState({tag})
   }
 
-  handleOnFocus (e) {
-    let {onFocus} = this.props.inputProps
-
-    if (onFocus) {
-      onFocus(e)
-    }
-
-    this.setState({isFocused: true})
-  }
-
-  handleOnBlur (e) {
-    let {onBlur} = this.props.inputProps
-
-    this.setState({isFocused: false})
-
-    if (e == null) {
-      return
-    }
-
-    if (onBlur) {
-      onBlur(e)
-    }
-
-    if (this.props.addOnBlur) {
-      const tag = this._makeTag(e.target.value)
-      this._addTags([tag])
-    }
-  }
-
   handleRemove (tag) {
     this._removeTag(tag)
+  }
+
+  setStateToFocused() {
+  	if (!this.state.isFocused) {
+	  	this.setState({
+	  		isFocused: true
+	  	});
+	}
+  }
+
+  setStateToNotFocused() {
+  	if (this.state.isFocused) {
+	  	this.setState({
+	  		isFocused: false
+	  	});
+	}
+  }
+
+  setInputStateToFocused() {
+  	if (!this.state.inputIsFocused) {
+	  	this.setState({
+	  		inputIsFocused: true
+	  	});
+	}
+  }
+
+  setInputStateToNotFocused() {
+  	if (this.state.inputIsFocused) {
+	  	this.setState({
+	  		inputIsFocused: false
+	  	});
+	}
   }
 
   inputProps () {
@@ -361,7 +365,7 @@ class TagsInput extends React.Component {
   render () {
     // eslint-disable-next-line
     let {value, onChange, tagProps, renderLayout, renderTag, renderInput, addKeys, removeKeys, className, focusedClassName, addOnBlur, addOnPaste, inputProps, pasteSplit, onlyUnique, maxTags, validationRegex, disabled, tagDisplayProp, ...other} = this.props
-    let {tag, isFocused} = this.state
+    let {tag, isFocused, inputIsFocused} = this.state
 
     if (isFocused) {
       className += ' ' + focusedClassName
@@ -369,19 +373,22 @@ class TagsInput extends React.Component {
 
     let tagComponents = value.map((tag, index) => {
       return renderTag({
-        key: index, tag, onRemove: ::this.handleRemove, disabled, getTagDisplayValue: ::this._getTagDisplayValue, ...tagProps
+        key: index, tag, onRemove: ::this.handleRemove, disabled, setStateToFocused: () => this.setStateToFocused(), setStateToNotFocused: () => this.setStateToNotFocused(), setInputStateToFocused: () => this.setInputStateToFocused(), getTagDisplayValue: ::this._getTagDisplayValue, ...tagProps
       })
     })
 
     let inputComponent = renderInput({
       ref: 'input',
       value: tag,
+      isFocused: isFocused,
+      setStateToFocused: ::this.setStateToFocused,
+      setStateToNotFocused: ::this.setStateToNotFocused,
       onPaste: ::this.handlePaste,
       onKeyDown: ::this.handleKeyDown,
       onChange: ::this.handleChange,
-      onFocus: ::this.handleOnFocus,
-      onBlur: ::this.handleOnBlur,
       addTag: ::this.addTag,
+      inputIsFocused: inputIsFocused,
+      setInputStateToNotFocused: ::this.setInputStateToNotFocused,
       ...this.inputProps()
     })
 
