@@ -209,7 +209,7 @@
 
       var _this = _possibleConstructorReturn(this, (TagsInput.__proto__ || Object.getPrototypeOf(TagsInput)).call(this));
 
-      _this.state = { tag: '', isFocused: false, inputIsFocused: false };
+      _this.state = { tag: '', isFocused: false, inputIsFocused: false, isTagFocused: false };
       _this.focus = _this.focus.bind(_this);
       _this.blur = _this.blur.bind(_this);
       return _this;
@@ -431,8 +431,10 @@
       key: 'setStateToFocused',
       value: function setStateToFocused() {
         if (!this.state.isFocused) {
-          this.setState({
-            isFocused: true
+          this.setState(function () {
+            return {
+              isFocused: true
+            };
           });
         }
       }
@@ -440,8 +442,10 @@
       key: 'setStateToNotFocused',
       value: function setStateToNotFocused() {
         if (this.state.isFocused) {
-          this.setState({
-            isFocused: false
+          this.setState(function () {
+            return {
+              isFocused: false
+            };
           });
         }
       }
@@ -449,8 +453,10 @@
       key: 'setInputStateToFocused',
       value: function setInputStateToFocused() {
         if (!this.state.inputIsFocused) {
-          this.setState({
-            inputIsFocused: true
+          this.setState(function () {
+            return {
+              inputIsFocused: true
+            };
           });
         }
       }
@@ -458,8 +464,10 @@
       key: 'setInputStateToNotFocused',
       value: function setInputStateToNotFocused() {
         if (this.state.inputIsFocused) {
-          this.setState({
-            inputIsFocused: false
+          this.setState(function () {
+            return {
+              inputIsFocused: false
+            };
           });
         }
       }
@@ -537,13 +545,7 @@
 
         var tagComponents = value.map(function (tag, index) {
           return renderTag(_extends({
-            key: index, tag: tag, onRemove: _this4.handleRemove.bind(_this4), disabled: disabled, setStateToFocused: function setStateToFocused() {
-              return _this4.setStateToFocused();
-            }, setStateToNotFocused: function setStateToNotFocused() {
-              return _this4.setStateToNotFocused();
-            }, setInputStateToFocused: function setInputStateToFocused() {
-              return _this4.setInputStateToFocused();
-            }, getTagDisplayValue: _this4._getTagDisplayValue.bind(_this4) }, tagProps));
+            isFocused: isFocused, key: index, tag: tag, onRemove: _this4.handleRemove.bind(_this4), disabled: disabled, setStateToFocused: _this4.setStateToFocused.bind(_this4), setStateToNotFocused: _this4.setStateToNotFocused.bind(_this4), setInputStateToFocused: _this4.setInputStateToFocused.bind(_this4), getTagDisplayValue: _this4._getTagDisplayValue.bind(_this4) }, tagProps));
         });
 
         var inputComponent = renderInput(_extends({

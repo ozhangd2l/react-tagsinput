@@ -300,32 +300,40 @@ class TagsInput extends React.Component {
 
   setStateToFocused() {
   	if (!this.state.isFocused) {
-	  	this.setState({
-	  		isFocused: true
+	  	this.setState(() => {
+	  		return {
+	  			isFocused: true
+	  		}
 	  	});
 	}
   }
 
   setStateToNotFocused() {
   	if (this.state.isFocused) {
-	  	this.setState({
-	  		isFocused: false
+	  	this.setState(() => {
+	  		return {
+	  			isFocused: false
+	  		}
 	  	});
 	}
   }
 
   setInputStateToFocused() {
   	if (!this.state.inputIsFocused) {
-	  	this.setState({
-	  		inputIsFocused: true
+	  	this.setState(() => {
+	  		return {
+	  			inputIsFocused: true
+	  		}
 	  	});
 	}
   }
 
   setInputStateToNotFocused() {
   	if (this.state.inputIsFocused) {
-	  	this.setState({
-	  		inputIsFocused: false
+	  	this.setState(() => {
+	  		return {
+	  			inputIsFocused: false
+	  		}
 	  	});
 	}
   }
@@ -367,13 +375,13 @@ class TagsInput extends React.Component {
     let {value, onChange, tagProps, renderLayout, renderTag, renderInput, addKeys, removeKeys, className, focusedClassName, addOnBlur, addOnPaste, inputProps, pasteSplit, onlyUnique, maxTags, validationRegex, disabled, tagDisplayProp, ...other} = this.props
     let {tag, isFocused, inputIsFocused} = this.state
 
-    if (isFocused) {
+    if (isFocused) {	
       className += ' ' + focusedClassName
     }
 
     let tagComponents = value.map((tag, index) => {
       return renderTag({
-        key: index, tag, onRemove: ::this.handleRemove, disabled, setStateToFocused: () => this.setStateToFocused(), setStateToNotFocused: () => this.setStateToNotFocused(), setInputStateToFocused: () => this.setInputStateToFocused(), getTagDisplayValue: ::this._getTagDisplayValue, ...tagProps
+        isFocused: isFocused, key: index, tag, onRemove: ::this.handleRemove, disabled, setStateToFocused: ::this.setStateToFocused, setStateToNotFocused: ::this.setStateToNotFocused, setInputStateToFocused: ::this.setInputStateToFocused, getTagDisplayValue: ::this._getTagDisplayValue, ...tagProps
       })
     })
 
